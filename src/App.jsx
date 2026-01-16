@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import emailjs from '@emailjs/browser'; // IMPORT ADDED
+import emailjs from '@emailjs/browser';
 import { 
   BarChart3, 
   Target, 
@@ -14,7 +14,6 @@ import {
   Instagram,
   Linkedin,
   Facebook,
-  Zap,
   Award,
   Smartphone,
   ChevronRight
@@ -25,11 +24,9 @@ const VSEConsultants = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   
-  // NEW: State for form submission
   const form = useRef();
   const [submitStatus, setSubmitStatus] = useState('idle'); // idle, sending, success, error
 
-  // Handle scroll effects for navbar
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
@@ -46,12 +43,11 @@ const VSEConsultants = () => {
     }
   };
 
-  // NEW: Email Sending Function
   const sendEmail = (e) => {
     e.preventDefault();
     setSubmitStatus('sending');
 
-    // REPLACE THESE STRINGS WITH YOUR ACTUAL ID'S FROM EMAILJS DASHBOARD
+    // YOUR ACTUAL ID'S
     const SERVICE_ID = 'service_ki4zkt8'; 
     const TEMPLATE_ID = 'template_zz1b01a'; 
     const PUBLIC_KEY = 'HE3_OhFFa-7xTWop5'; 
@@ -60,8 +56,8 @@ const VSEConsultants = () => {
       .then((result) => {
           console.log(result.text);
           setSubmitStatus('success');
-          e.target.reset(); // Clear form after success
-          setTimeout(() => setSubmitStatus('idle'), 5000); // Reset button after 5 seconds
+          e.target.reset(); 
+          setTimeout(() => setSubmitStatus('idle'), 5000); 
       }, (error) => {
           console.log(error.text);
           setSubmitStatus('error');
@@ -466,28 +462,32 @@ const VSEConsultants = () => {
             </p>
           </div>
 
-          {/* UPDATED: Form now uses 'ref' and 'onSubmit' */}
           <form ref={form} onSubmit={sendEmail} className="max-w-xl mx-auto bg-white/5 p-8 rounded-3xl border border-white/10 backdrop-blur-md shadow-2xl relative">
             <div className="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-purple-600/20 rounded-full blur-3xl pointer-events-none"></div>
             
             <div className="space-y-6 relative z-10">
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-2">Company Name</label>
-                {/* ADDED name attribute */}
                 <input required name="company_name" type="text" className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all" placeholder="Your Brand" />
               </div>
+              
+              {/* NEW: Phone Number Input */}
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Social Media / Website Links</label>
-                {/* ADDED name attribute */}
-                <textarea required name="message" className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all h-32" placeholder="e.g. instagram.com/brand, yourwebsite.com"></textarea>
+                <label className="block text-sm font-medium text-slate-300 mb-2">Phone Number</label>
+                <input required name="phone_number" type="tel" className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all" placeholder="+254 700 000 000" />
               </div>
+
+              {/* UPDATED: Type="url" forces a valid link */}
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">Social Media / Website Link</label>
+                <input required name="website_link" type="url" className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all" placeholder="https://instagram.com/yourbrand" />
+              </div>
+              
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-2">Email Address</label>
-                {/* ADDED name attribute */}
                 <input required name="user_email" type="email" className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all" placeholder="you@company.com" />
               </div>
               
-              {/* UPDATED: Button state handling */}
               <button 
                 type="submit" 
                 disabled={submitStatus === 'sending' || submitStatus === 'success'}
@@ -553,7 +553,6 @@ const VSEConsultants = () => {
               <h4 className="font-bold text-white mb-6">Contact</h4>
               <ul className="space-y-4 text-slate-400 text-sm">
                 <li className="flex items-center gap-3">
-                  {/* UPDATED EMAIL HERE */}
                   <Mail className="w-4 h-4" /> vsesalesconsultants@gmail.com
                 </li>
                 <li className="flex items-center gap-3">
