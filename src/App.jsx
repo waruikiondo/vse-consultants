@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import emailjs from '@emailjs/browser'; // IMPORT ADDED
 import { 
   BarChart3, 
   Target, 
@@ -23,6 +24,10 @@ const VSEConsultants = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeTestimonial, setActiveTestimonial] = useState(0);
+  
+  // NEW: State for form submission
+  const form = useRef();
+  const [submitStatus, setSubmitStatus] = useState('idle'); // idle, sending, success, error
 
   // Handle scroll effects for navbar
   useEffect(() => {
@@ -39,6 +44,28 @@ const VSEConsultants = () => {
       element.scrollIntoView({ behavior: 'smooth' });
       setIsMenuOpen(false);
     }
+  };
+
+  // NEW: Email Sending Function
+  const sendEmail = (e) => {
+    e.preventDefault();
+    setSubmitStatus('sending');
+
+    // REPLACE THESE STRINGS WITH YOUR ACTUAL ID'S FROM EMAILJS DASHBOARD
+    const SERVICE_ID = 'service_ki4zkt8'; 
+    const TEMPLATE_ID = 'template_zz1b01a'; 
+    const PUBLIC_KEY = 'HE3_OhFFa-7xTWop5'; 
+
+    emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, form.current, PUBLIC_KEY)
+      .then((result) => {
+          console.log(result.text);
+          setSubmitStatus('success');
+          e.target.reset(); // Clear form after success
+          setTimeout(() => setSubmitStatus('idle'), 5000); // Reset button after 5 seconds
+      }, (error) => {
+          console.log(error.text);
+          setSubmitStatus('error');
+      });
   };
 
   const testimonials = [
@@ -63,7 +90,6 @@ const VSEConsultants = () => {
       <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-slate-950/90 backdrop-blur-md border-b border-slate-800 py-4' : 'bg-transparent py-6'}`}>
         <div className="container mx-auto px-6 flex justify-between items-center">
           <div className="flex items-center gap-2">
-            {/* Logo in white container for visibility */}
             <div className="bg-white rounded-lg p-1.5 shadow-lg shadow-indigo-500/10">
               <img 
                 src="/vse.png" 
@@ -105,7 +131,6 @@ const VSEConsultants = () => {
 
       {/* Hero Section */}
       <header className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
-        {/* Background Image with Overlay */}
         <div className="absolute inset-0 z-0">
           <img 
             src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=2000" 
@@ -115,7 +140,6 @@ const VSEConsultants = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-950/90 to-slate-950"></div>
         </div>
 
-        {/* Abstract Background Blobs */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full overflow-hidden -z-10 pointer-events-none">
           <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-indigo-600/20 rounded-full blur-[120px] mix-blend-screen animate-pulse"></div>
           <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-violet-600/20 rounded-full blur-[120px] mix-blend-screen animate-pulse delay-1000"></div>
@@ -157,7 +181,6 @@ const VSEConsultants = () => {
           <div className="mt-16 pt-10 border-t border-slate-800/50 flex flex-col md:flex-row justify-center items-center gap-8 md:gap-16 text-slate-500 text-sm font-medium uppercase tracking-wider">
             <span>Trusted by elite brands</span>
             <div className="flex items-center gap-8">
-               {/* UPDATED: Bigger Partner Logos in larger White Boxes */}
                <div className="bg-white rounded-xl px-6 py-4 shadow-lg shadow-indigo-500/10 transform hover:scale-105 transition-all duration-300">
                  <img src="/zaliha.png" alt="Zalika Logo" className="h-16 md:h-20 w-auto object-contain" />
                </div>
@@ -201,7 +224,6 @@ const VSEConsultants = () => {
               <div className="relative group">
                 <div className="absolute -inset-4 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-2xl opacity-30 blur-lg group-hover:opacity-50 transition-opacity duration-700"></div>
                 <div className="relative rounded-2xl overflow-hidden border border-slate-700 aspect-video lg:aspect-square">
-                  {/* High Quality Stock Image */}
                   <img 
                     src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&q=80&w=2000" 
                     alt="Strategic Team Meeting" 
@@ -317,7 +339,6 @@ const VSEConsultants = () => {
 
             {/* Right Content Side */}
             <div className="w-full md:w-3/5 p-8 md:p-12 flex flex-col justify-center">
-               {/* UPDATED: Title and content from the blog post */}
                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Latest Insights: From Clutter to Clarity</h2>
                <p className="text-slate-400 mb-6 leading-relaxed">
                  When legacy accounts and digital clutter stifle lead generation, aggressive optimization is key. 
@@ -403,7 +424,6 @@ const VSEConsultants = () => {
 
       {/* Testimonials */}
       <section className="py-24 bg-slate-900 text-center relative overflow-hidden">
-        {/* Background texture */}
         <div className="absolute inset-0 opacity-5 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at center, #6366f1 1px, transparent 1px)', backgroundSize: '24px 24px' }}></div>
         
         <div className="container mx-auto px-6 relative z-10">
@@ -446,24 +466,40 @@ const VSEConsultants = () => {
             </p>
           </div>
 
-          <form className="max-w-xl mx-auto bg-white/5 p-8 rounded-3xl border border-white/10 backdrop-blur-md shadow-2xl relative">
+          {/* UPDATED: Form now uses 'ref' and 'onSubmit' */}
+          <form ref={form} onSubmit={sendEmail} className="max-w-xl mx-auto bg-white/5 p-8 rounded-3xl border border-white/10 backdrop-blur-md shadow-2xl relative">
             <div className="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-purple-600/20 rounded-full blur-3xl pointer-events-none"></div>
             
             <div className="space-y-6 relative z-10">
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-2">Company Name</label>
-                <input type="text" className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all" placeholder="Your Brand" />
+                {/* ADDED name attribute */}
+                <input required name="company_name" type="text" className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all" placeholder="Your Brand" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-2">Social Media / Website Links</label>
-                <textarea className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all h-32" placeholder="e.g. instagram.com/brand, yourwebsite.com"></textarea>
+                {/* ADDED name attribute */}
+                <textarea required name="message" className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all h-32" placeholder="e.g. instagram.com/brand, yourwebsite.com"></textarea>
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-2">Email Address</label>
-                <input type="email" className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all" placeholder="you@company.com" />
+                {/* ADDED name attribute */}
+                <input required name="user_email" type="email" className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all" placeholder="you@company.com" />
               </div>
-              <button className="w-full py-4 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white rounded-xl font-bold text-lg shadow-lg shadow-indigo-500/30 transform transition hover:scale-[1.02]">
-                Claim My Free Audit
+              
+              {/* UPDATED: Button state handling */}
+              <button 
+                type="submit" 
+                disabled={submitStatus === 'sending' || submitStatus === 'success'}
+                className={`w-full py-4 rounded-xl font-bold text-lg shadow-lg transform transition hover:scale-[1.02] ${
+                  submitStatus === 'success' 
+                    ? 'bg-emerald-600 text-white shadow-emerald-500/30' 
+                    : submitStatus === 'error'
+                    ? 'bg-red-600 text-white'
+                    : 'bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white shadow-indigo-500/30'
+                }`}
+              >
+                {submitStatus === 'sending' ? 'Sending...' : submitStatus === 'success' ? 'Request Sent!' : submitStatus === 'error' ? 'Error. Try Again.' : 'Claim My Free Audit'}
               </button>
             </div>
             <p className="text-center text-xs text-slate-500 mt-6">
@@ -479,7 +515,6 @@ const VSEConsultants = () => {
           <div className="grid md:grid-cols-4 gap-12 mb-16">
             <div className="col-span-1 md:col-span-2">
               <div className="flex items-center gap-2 mb-6">
-                {/* Footer Logo in white container */}
                 <div className="bg-white rounded-lg p-1.5">
                   <img 
                     src="/vse.png" 
@@ -518,6 +553,7 @@ const VSEConsultants = () => {
               <h4 className="font-bold text-white mb-6">Contact</h4>
               <ul className="space-y-4 text-slate-400 text-sm">
                 <li className="flex items-center gap-3">
+                  {/* UPDATED EMAIL HERE */}
                   <Mail className="w-4 h-4" /> vsesalesconsultants@gmail.com
                 </li>
                 <li className="flex items-center gap-3">
