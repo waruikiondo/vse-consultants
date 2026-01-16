@@ -471,13 +471,13 @@ const VSEConsultants = () => {
                 <input required name="company_name" type="text" className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all" placeholder="Your Brand" />
               </div>
               
-              {/* NEW: Phone Number Input */}
+              {/* Phone Number Input */}
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-2">Phone Number</label>
                 <input required name="phone_number" type="tel" className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all" placeholder="+254 700 000 000" />
               </div>
 
-              {/* UPDATED: Type="url" forces a valid link */}
+              {/* Website Link */}
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-2">Social Media / Website Link</label>
                 <input required name="website_link" type="url" className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all" placeholder="https://instagram.com/yourbrand" />
@@ -530,9 +530,12 @@ const VSEConsultants = () => {
                 <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-indigo-600 hover:text-white transition-all">
                   <Instagram className="w-5 h-5" />
                 </a>
-                <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-blue-600 hover:text-white transition-all">
+                
+                {/* UPDATED LINKEDIN LINK */}
+                <a href="https://www.linkedin.com/company/vse-sales-consultants/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-blue-600 hover:text-white transition-all">
                   <Linkedin className="w-5 h-5" />
                 </a>
+                
                 <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-blue-500 hover:text-white transition-all">
                   <Facebook className="w-5 h-5" />
                 </a>
