@@ -183,6 +183,9 @@ const VSEConsultants = () => {
                <div className="bg-white rounded-xl px-6 py-4 shadow-lg shadow-indigo-500/10 transform hover:scale-105 transition-all duration-300">
                  <img src="/auwana.png" alt="Auwana Logo" className="h-16 md:h-20 w-auto object-contain" />
                </div>
+               <div className="bg-white rounded-xl px-6 py-4 shadow-lg shadow-indigo-500/10 transform hover:scale-105 transition-all duration-300">
+                 <img src="/vet.png" alt="Vet Logo" className="h-16 md:h-20 w-auto object-contain" />
+               </div>
             </div>
           </div>
         </div>
